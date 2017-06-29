@@ -1,6 +1,13 @@
 # COPYRIGHT (C) MATT PAAUW 2016
 # https://github.com/mpaauw/ticker-quote-bot
 
-with open ('credentials.config', 'r') as f:
-    read_data = f.read()
-    print(read_data)
+import configparser
+
+config = configparser.ConfigParser()
+config.readfp(open("credentials.config"))
+
+clientId = config.get("creds", "clientId")
+clientSecret = config.get("creds", "clientSecret")
+userAgent = config.get("creds", "userAgent")
+username = config.get("creds", "username")
+password = config.get("creds", "password")
