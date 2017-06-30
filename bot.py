@@ -15,4 +15,12 @@ password = config.get("creds", "password")
 
 reddit = praw.Reddit(client_id=clientId, client_secret=clientSecret, password=password, user_agent=userAgent,  username=username)
 
-reddit.subreddit('test').submit('Test Post Please Ignore, Fam', url='https://reddit.com')
+for submission in reddit.subreddit('all').hot(limit=1):
+    count = 1
+    for topLevelComment in submission.comments:
+        if not hasattr(topLevelComment, 'body'):
+            continue
+        print('[' + str(count) + ']')
+        print(topLevelComment.body)
+        count += 1
+        
