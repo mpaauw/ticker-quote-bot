@@ -3,6 +3,8 @@
 
 import praw
 import configparser
+import quandl
+import datetime
 
 config = configparser.ConfigParser()
 config.readfp(open("credentials.config"))
@@ -12,15 +14,22 @@ clientSecret = config.get("creds", "clientSecret")
 userAgent = config.get("creds", "userAgent")
 username = config.get("creds", "username")
 password = config.get("creds", "password")
+quandlKey = config.get("creds", "quandlKey")
+call = config.get("creds", "call")
 
+quandl.ApiConfig.api_key = quandlKey
 reddit = praw.Reddit(client_id=clientId, client_secret=clientSecret, password=password, user_agent=userAgent,  username=username)
 
-for submission in reddit.subreddit('all').hot(limit=1):
-    count = 1
-    for topLevelComment in submission.comments:
-        if not hasattr(topLevelComment, 'body'):
+for submission in reddit.subreddit('test').new(limit=5):
+    for comment in submission.comments.list():
+        if not hasattr(comment, 'body'):
             continue
-        print('[' + str(count) + ']')
-        print(topLevelComment.body)
-        count += 1
+        if call in comment.body:
+            splitBody = comment.body.split('@')
+            length = len(splitBody)
+            if len(splitBody) > 1:
+                ticker = splitBody[1]
+                date = datetime.datetime.now().strftime("%Y-%m-%d")
+                data = quandl.Dataset('WIKI/' + ticker).data(params={'start_date':date, 'end_date':date, 'rows':1})
+                comment.reply('[%s] last closing price: [%s]' % (ticker, data[0].close))
         
