@@ -15,12 +15,13 @@ userAgent = config.get("creds", "userAgent")
 username = config.get("creds", "username")
 password = config.get("creds", "password")
 quandlKey = config.get("creds", "quandlKey")
+sub = config.get("creds", "sub")
 call = config.get("creds", "call")
 
 quandl.ApiConfig.api_key = quandlKey
 reddit = praw.Reddit(client_id=clientId, client_secret=clientSecret, password=password, user_agent=userAgent,  username=username)
 
-for submission in reddit.subreddit('test').new(limit=5):
+for submission in reddit.subreddit(sub).new(limit=5):
     for comment in submission.comments.list():
         if not hasattr(comment, 'body'):
             continue
