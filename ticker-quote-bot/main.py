@@ -7,13 +7,3 @@ r = Reddit(configuration.clientId, configuration.clientSecret, configuration.pas
 data = Data(configuration.quandlKey)
 
 r.parseSubmissions(configuration.sub, data)
-
-
-# print(configuration.clientId)
-# print(configuration.clientSecret)
-# print(configuration.userAgent)
-# print(configuration.username)
-# print(configuration.password)
-# print(configuration.quandlKey)
-# print(configuration.sub)
-# print(configuration.call)
