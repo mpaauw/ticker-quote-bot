@@ -1,6 +1,5 @@
 import praw
 from praw.models import MoreComments
-import datetime
 import sys
 
 class Reddit:
@@ -14,7 +13,7 @@ class Reddit:
 
     def parseSubmissions(self, sub, data):
         with open('ticker-quote-bot\cache.txt', 'r+') as cache:
-            
+
             cacheContent = cache.readlines()
             cacheContent = [item.strip() for item in cacheContent]  
 
@@ -35,7 +34,6 @@ class Reddit:
                         splitBody = comment.body.split('@')
                         if len(splitBody) > 1: 
                             ticker = splitBody[1]
-                            date = datetime.datetime.now().strftime("%Y-%m-%d")
                             try:
                                 quote = data.getQuote(ticker)
                                 comment.reply('[%s] last closing price: [%s]' % (ticker, quote))
