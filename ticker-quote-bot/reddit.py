@@ -14,9 +14,10 @@ class Reddit:
 
     def parseSubmissions(self, sub, data):
         with open('ticker-quote-bot\cache.txt', 'r+') as cache:
+            
             cacheContent = cache.readlines()
-            cacheContent = [item.strip() for item in cacheContent]
-        
+            cacheContent = [item.strip() for item in cacheContent]  
+
             for submission in self.instance.subreddit(sub).new():
                 for comment in submission.comments.list():
 

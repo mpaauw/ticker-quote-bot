@@ -1,4 +1,3 @@
-# import quandl
 import requests
 import json
 import sys
@@ -17,9 +16,6 @@ class Data:
         print('[%s]' % (response.status_code))
 
         try:
-            # responseString = json.dumps(response.json()['Time Series (1min)'])
-            # responseDict = json.loads(responseString)
-            # quote = dataSet = list(responseDict.values())[0]['4. close']
             quote = list(json.loads(json.dumps(response.json()['Time Series (1min)'])).values())[0]['4. close']
             print(quote)
             return quote
