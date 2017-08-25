@@ -36,10 +36,11 @@ class Reddit:
                             ticker = splitBody[1]
                             date = datetime.datetime.now().strftime("%Y-%m-%d")
                             try:
-                                quote = data.getQuote(ticker, date)
-                                comment.reply('[%s] last closing price: [%s]' % (ticker, quote[0].close))
+                                quote = data.getQuote(ticker)
+                                comment.reply('[%s] last closing price: [%s]' % (ticker, quote))
                                 print('Reply added to Comment: [%s] requesting quote for [%s]' % (comment.fullname, ticker))
                                 cache.write(comment.fullname + '\n')
                                 print('Comment added to cache: [%s]' % (comment.fullname))
-                            except:
+                            except Exception as e:
                                 print('Error fetching quote: [%s]' % (ticker))
+                                print(e)

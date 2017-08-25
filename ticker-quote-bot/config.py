@@ -7,7 +7,7 @@ class Configuration:
     userAgent = ''
     username = ''
     password = ''
-    quandlKey = ''
+    apiKey = ''
     sub = ''
     call = ''
 
@@ -19,6 +19,6 @@ class Configuration:
         self.userAgent = config.get("creds", "userAgent")
         self.username = config.get("creds", "username")
         self.password = config.get("creds", "password")
-        self.quandlKey = config.get("creds", "quandlKey")
+        self.apiKey = config.get("creds", "apiKey")
         self.sub = config.get("creds", "sub")
         self.call = config.get("creds", "call")        
