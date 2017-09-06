@@ -4,6 +4,7 @@ import sys
 
 class Reddit:
 
+    searchUrl = 'https://www.google.com/search?q=stock+quote+'
     instance = None
     call = ''
 
@@ -36,10 +37,17 @@ class Reddit:
                             ticker = splitBody[1]
                             try:
                                 quote = data.getQuote(ticker)
-                                comment.reply('[%s] last closing price: [%s]' % (ticker, quote))
+                                commentReply = self.buildCommentReply(ticker, quote)
+                                comment.reply(commentReply)
                                 print('Reply added to Comment: [%s] requesting quote for [%s]' % (comment.fullname, ticker))
                                 cache.write(comment.fullname + '\n')
                                 print('Comment added to cache: [%s]' % (comment.fullname))
                             except Exception as e:
                                 print('Error fetching quote: [%s]' % (ticker))
                                 print(e)
+
+    def buildCommentReply(self, ticker, quote):
+        upperTicker = ticker.upper()
+        searchLink = '[%s](%s%s)' % (upperTicker, self.searchUrl, upperTicker)
+        comment = 'Ticker|Open|High|Low|Close|Volume\n:-|:-|:-|:-|:-|:-\n%s|%s|%s|%s|%s|%s\n' % (searchLink, quote.open, quote.high, quote.low, quote.close, quote.volume)
+        return comment
