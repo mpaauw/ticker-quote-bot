@@ -1,6 +1,7 @@
 import requests
 import json
 import sys
+from decimal import Decimal
 
 class Data:
 
@@ -17,7 +18,7 @@ class Data:
 
         try:
             quote = list(json.loads(json.dumps(response.json()['Time Series (1min)'])).values())[0]['4. close']
-            print(quote)
+            quote = Decimal(str(quote)).quantize(Decimal('.01'))
             return quote
         except Exception as e:
             print(e)      
