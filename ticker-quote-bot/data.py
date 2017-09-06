@@ -2,6 +2,7 @@ import requests
 import json
 import sys
 from decimal import Decimal
+from quote import Quote
 
 class Data:
 
@@ -17,8 +18,15 @@ class Data:
         print('[%s]' % (response.status_code))
 
         try:
-            quote = list(json.loads(json.dumps(response.json()['Time Series (1min)'])).values())[0]['4. close']
-            quote = Decimal(str(quote)).quantize(Decimal('.01'))
+            open = Decimal(str(list(json.loads(json.dumps(response.json()['Time Series (1min)'])).values())[0]['1. open'])).quantize(Decimal('.01'))
+            high = Decimal(str(list(json.loads(json.dumps(response.json()['Time Series (1min)'])).values())[0]['2. high'])).quantize(Decimal('.01'))
+            low = Decimal(str(list(json.loads(json.dumps(response.json()['Time Series (1min)'])).values())[0]['3. low'])).quantize(Decimal('.01'))
+            close = Decimal(str(list(json.loads(json.dumps(response.json()['Time Series (1min)'])).values())[0]['4. close'])).quantize(Decimal('.01'))
+            volume = Decimal(str(list(json.loads(json.dumps(response.json()['Time Series (1min)'])).values())[0]['5. volume'])).quantize(Decimal('.01'))
+
+            quote = Quote(open, high, low, close, volume)
+            print('%s,%s,%s,%s,%s' % (quote.open, quote.high, quote.low, quote.close, quote.volume))
+
             return quote
         except Exception as e:
             print(e)      
