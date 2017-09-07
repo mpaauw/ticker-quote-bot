@@ -7,10 +7,12 @@ class Reddit:
     searchUrl = 'https://www.google.com/search?q=stock+quote+'
     instance = None
     call = ''
+    metrics = None
 
-    def __init__(self, clientId, clientSecret, password, userAgent, username, call):
+    def __init__(self, clientId, clientSecret, password, userAgent, username, call, metrics):
         self.instance = praw.Reddit(client_id=clientId, client_secret=clientSecret, password=password, user_agent=userAgent,  username=username) 
         self.call = call
+        self.metrics = metrics
 
     def parseSubmissions(self, sub, data):
         with open('ticker-quote-bot\cache.txt', 'r+') as cache:
@@ -19,7 +21,9 @@ class Reddit:
             cacheContent = [item.strip() for item in cacheContent]  
 
             for submission in self.instance.subreddit(sub).new():
-                for comment in submission.comments.list():
+                flattenedComments = submission.comments.list()
+
+                for comment in flattenedComments:
 
                     if isinstance(comment, MoreComments):
                         continue
@@ -45,6 +49,10 @@ class Reddit:
                             except Exception as e:
                                 print('Error fetching quote: [%s]' % (ticker))
                                 print(e)
+
+                    self.metrics.trackComment()
+
+                self.metrics.trackSubmission()
 
     def buildCommentReply(self, ticker, quote):
         upperTicker = ticker.upper()
