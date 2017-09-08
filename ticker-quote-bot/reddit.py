@@ -15,44 +15,50 @@ class Reddit:
         self.metrics = metrics
 
     def parseSubmissions(self, sub, data):
-        with open('ticker-quote-bot\cache.txt', 'r+') as cache:
 
-            cacheContent = cache.readlines()
-            cacheContent = [item.strip() for item in cacheContent]  
+        mentions = self.instance.inbox.mentions()
 
-            for submission in self.instance.subreddit(sub).new():
-                flattenedComments = submission.comments.list()
+        for mention in mentions:
+            print(mention.body)
 
-                for comment in flattenedComments:
+        # with open('ticker-quote-bot\cache.txt', 'r+') as cache:
 
-                    if isinstance(comment, MoreComments):
-                        continue
+        #     cacheContent = cache.readlines()
+        #     cacheContent = [item.strip() for item in cacheContent]  
 
-                    if comment.fullname in cacheContent:
-                        print('Comment already visited, skipping: [%s]' % (comment.fullname))
-                        continue
+        #     for submission in self.instance.subreddit(sub).new():
+        #         flattenedComments = submission.comments.list()
 
-                    if not hasattr(comment, 'body'):
-                        continue
+        #         for comment in flattenedComments:
+
+        #             if isinstance(comment, MoreComments):
+        #                 continue
+
+        #             if comment.fullname in cacheContent:
+        #                 print('Comment already visited, skipping: [%s]' % (comment.fullname))
+        #                 continue
+
+        #             if not hasattr(comment, 'body'):
+        #                 continue
                     
-                    if self.call in comment.body:
-                        splitBody = comment.body.split('@')
-                        if len(splitBody) > 1: 
-                            ticker = splitBody[1]
-                            try:
-                                quote = data.getQuote(ticker)
-                                commentReply = self.buildCommentReply(ticker, quote)
-                                comment.reply(commentReply)
-                                print('Reply added to Comment: [%s] requesting quote for [%s]' % (comment.fullname, ticker))
-                                cache.write(comment.fullname + '\n')
-                                print('Comment added to cache: [%s]' % (comment.fullname))
-                            except Exception as e:
-                                print('Error fetching quote: [%s]' % (ticker))
-                                print(e)
+        #             if self.call in comment.body:
+        #                 splitBody = comment.body.split('@')
+        #                 if len(splitBody) > 1: 
+        #                     ticker = splitBody[1]
+        #                     try:
+        #                         quote = data.getQuote(ticker)
+        #                         commentReply = self.buildCommentReply(ticker, quote)
+        #                         comment.reply(commentReply)
+        #                         print('Reply added to Comment: [%s] requesting quote for [%s]' % (comment.fullname, ticker))
+        #                         cache.write(comment.fullname + '\n')
+        #                         print('Comment added to cache: [%s]' % (comment.fullname))
+        #                     except Exception as e:
+        #                         print('Error fetching quote: [%s]' % (ticker))
+        #                         print(e)
 
-                    self.metrics.trackComment()
+        #             self.metrics.trackComment()
 
-                self.metrics.trackSubmission()
+        #         self.metrics.trackSubmission()
 
     def buildCommentReply(self, ticker, quote):
         upperTicker = ticker.upper()
