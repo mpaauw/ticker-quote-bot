@@ -10,7 +10,7 @@ configuration = Configuration()
 r = Reddit(configuration.clientId, configuration.clientSecret, configuration.password, configuration.userAgent, configuration.username, configuration.call, metrics)
 data = Data(configuration.apiKey)
 
-r.parseSubmissions(configuration.sub, data)
+r.parseUnreadItems(data)
 
 metrics.end()
-metrics.buildReport()
+metrics.buildInboxReport()
