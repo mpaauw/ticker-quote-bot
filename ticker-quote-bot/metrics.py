@@ -29,8 +29,12 @@ class Metrics:
     def end(self):
         self.endTime = self.getTime()
         self.totalTime = self.endTime - self.startTime
-        self.avgCommentTime = self.totalTime / self.totalComments
-        self.avgSubmissionTime = self.totalTime / self.totalSubmissions
+
+        if self.totalComments > 0:
+            self.avgCommentTime = self.totalTime / self.totalComments
+
+        if self.totalSubmissions > 0: 
+            self.avgSubmissionTime = self.totalTime / self.totalSubmissions
 
     def getTime(self):
         return time.clock()
