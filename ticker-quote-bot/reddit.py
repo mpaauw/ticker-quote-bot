@@ -35,7 +35,7 @@ class Reddit:
                         print(e)
             else:
                 item.mark_read()
-                self.metrics.trackitem(False)
+                self.metrics.trackItem(False)
 
     def parseSubmissions(self, sub, data):
         with open('ticker-quote-bot\cache.txt', 'r+') as cache:
