@@ -10,8 +10,8 @@ loggerInstance = Logger(configuration.logLocation)
 metrics = Metrics(loggerInstance)
 metrics.start()
 
-r = Reddit(configuration.clientId, configuration.clientSecret, configuration.password, configuration.userAgent, configuration.username, configuration.call, metrics)
-data = Data(configuration.apiKey)
+r = Reddit(configuration.clientId, configuration.clientSecret, configuration.password, configuration.userAgent, configuration.username, configuration.call, metrics, loggerInstance)
+data = Data(configuration.apiKey, loggerInstance)
 
 r.parseUnreadItems(data)
 

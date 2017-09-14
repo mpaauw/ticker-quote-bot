@@ -8,33 +8,43 @@ class Reddit:
     instance = None
     call = None
     metrics = None
+    logger = None
 
-    def __init__(self, clientId, clientSecret, password, userAgent, username, call, metrics):
+    def __init__(self, clientId, clientSecret, password, userAgent, username, call, metrics, logger):
         self.instance = praw.Reddit(client_id=clientId, client_secret=clientSecret, password=password, user_agent=userAgent,  username=username) 
         self.call = call
         self.metrics = metrics
+        self.logger = logger
+        self.logger.write('Reddit instantiated.')
 
     def parseUnreadItems(self, data):
         unreadItems = self.instance.inbox.unread()
         for item in unreadItems:
             if not hasattr(item, 'body'):
+                self.logger.write('Item [%s] has no body content, skipping.' % (item.fullname))
                 continue
             if self.call in item.body:
                 splitBody = item.body.split('@')
                 if len(splitBody) > 1: 
                     ticker = splitBody[1]
+                    self.logger.write('Ticker: [%s] requested by Item: [%s]' % (ticker, item.fullname))
                     try:
                         quote = data.getQuote(ticker)
                         reply = self.buildReply(ticker, quote)
                         item.reply(reply)
                         print('Reply added to Comment: [%s] requesting quote for [%s]' % (item.fullname, ticker))
+                        self.logger.write('Reply added to Item [%s] requesting quote for [%s]' % (item.fullname, ticker))
                         item.mark_read()
+                        self.logger.write('Item [%s] marked as read' % (item.fullname))
                         self.metrics.trackItem(True)
                     except Exception as e:
+                        self.logger.write('Error fetching Quote [%s] for Item [%s]' % (ticker, item.fullname))
+                        self.logger.writeError(e)
                         print('Error fetching quote: [%s]' % (ticker))
                         print(e)
             else:
                 item.mark_read()
+                self.logger.write('Item [%s] marked as read' % (item.fullname))
                 self.metrics.trackItem(False)
 
     def parseSubmissions(self, sub, data):
