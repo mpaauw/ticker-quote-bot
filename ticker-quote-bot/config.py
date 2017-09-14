@@ -10,6 +10,7 @@ class Configuration:
     apiKey = ''
     sub = ''
     call = ''
+    logLocation = ''
 
     def __init__(self):
         config = configparser.ConfigParser()
@@ -21,4 +22,5 @@ class Configuration:
         self.password = config.get("creds", "password")
         self.apiKey = config.get("creds", "apiKey")
         self.sub = config.get("creds", "sub")
-        self.call = config.get("creds", "call")        
+        self.call = config.get("creds", "call")
+        self.logLocation = config.get("creds", "logLocation")     
